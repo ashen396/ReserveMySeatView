@@ -1,0 +1,16 @@
+.schedule-holder{
+    border: 1px solid grey;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#schedule-datetime-holder{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+#schedule-holder-link{
+    text-decoration: none;
+    color: black;
+}

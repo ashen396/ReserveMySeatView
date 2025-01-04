@@ -1,0 +1,29 @@
+.homepage-contents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.homepage-selector-contents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.homepage-selector {
+    width: fit-content;
+    text-align: center;
+    margin: 25px;
+}
+
+.homepage-selector-contents>h5 {
+    margin-top: 5px;
+    margin-left: 25px;
+}
+
+.homepage-selector-contents>button {
+    margin-left: 25px;
+}
