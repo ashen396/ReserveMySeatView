@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import {AES} from 'crypto-js';
 import '../../styles/scheduleHolder.css';
 
 function FormatDate(date) {
@@ -13,8 +14,10 @@ function FormatTime(time) {
 }
 
 export default function SchedulesHolder({ schedule = Object }) {
+    const encScheduleID = AES.encrypt(schedule._id, "reservemyseat.secretkey");
+    const formattedScheduleID = encScheduleID.toString().replaceAll("/", "_")
     return (
-        <Link id='schedule-holder-link' to={`/schedules/${schedule._id}`}>
+        <Link id='schedule-holder-link' to={`/reservation/${formattedScheduleID}`}>
             <div className="container my-4 schedule-holder">
                 <div id='schedule-datetime-holder'>
                     <h2>{FormatDate(schedule.date)}</h2>

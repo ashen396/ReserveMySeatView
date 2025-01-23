@@ -1,0 +1,9 @@
+.seat-block{
+    padding: 5px;
+}
+
+.seat-block-link{
+    text-decoration: none;
+    font-style: none;
+    color: black;
+}

@@ -4,13 +4,17 @@ import '../App.css';
 import '../styles/homepage.css';
 
 async function Auth() {
-    await fetch(process.env.URL_AUTH || "http://127.0.0.1:4000/api/auth", {
+    await fetch("https://api.myseatreservation.live/api/auth", {
         method: "POST",
         mode: "cors"
     })
-        .then((response) => response.text()
-            .then((token) => {
-                localStorage.setItem("token", token);
+        .then((response) => response.json()
+            .then((json) => {
+                // console.log(json.data.token)
+                if (json.data.code === 200)
+                    localStorage.setItem("token", json.data.token);
+                else
+                    localStorage.removeItem("token")
             })
         ).catch((err) => console.log(err));
 }
@@ -64,7 +68,7 @@ function RouteSelector() {
 
             if (localStorage.getItem("token") === null)
                 Auth();
-        }, 60000);
+        }, 600000);
     }, [])
 
     return (
@@ -87,7 +91,7 @@ function RouteSelector() {
                         <option>VAVUNIA</option>
                     </select>
                     <h5>Date</h5>
-                    <input id='selector-date' className="form-select homepage-selector" type='date' min={SetMinDate()} onChange={() => SetSelectorDate(setDate)} />
+                    <input id='selector-date' className="form-select homepage-selector" type='date' /**min={SetMinDate()}*/ onChange={() => SetSelectorDate(setDate)} />
                     <Link to={`/schedules?source=${source}&destination=${destination}&date=${date}`} className='btn btn-primary'>Search</Link>
                 </div>
             </div>
