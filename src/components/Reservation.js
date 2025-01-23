@@ -49,6 +49,8 @@ async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBoo
                 json.data.schedules.bookings.map((_value, _index, _array) => reservedSeats.push(_value));
                 setBookedSeats(reservedSeats);
                 setBusSeats(json.data.schedules.bus.seats);
+                setSchedule(json.data.schedules);
+                console.log(json.data.schedules)
             })
         })
 }
@@ -124,8 +126,8 @@ export default function Reservation() {
     }, [])
     return (
         <>
-            <h1>{scheduleID}</h1>
-            {/* <p>{schedule}</p> */}
+            <h1>{schedule.bus.route.source} - {schedule.bus.route.destination}</h1>
+            <h4>{schedule.bus.route.distance} Kms - Rs.{schedule.bus.route.price}</h4>
             <table>
                 <tbody>
                     {busSeats.map((row, rowIndex) => (
@@ -142,7 +144,6 @@ export default function Reservation() {
                 </tbody>
             </table>
             <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID === null) ? handleClick() : login(setUserID, scheduleID, seats))} />
-            {/* <input type="button" className="btn btn-primary" value="Continue" onClick={() => login(setUserID)} /> */}
         </>
     )
 }
