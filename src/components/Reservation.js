@@ -29,7 +29,7 @@ async function auth(username, password) {
         ).catch((err) => console.log(err));
 }
 
-async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats) {
+async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBookedSeats) {
     await fetch(`https://api.myseatreservation.live/api/ntc/v1/schedules/${scheduleID}`, {
         headers: {
             authorization: "Bearer " + token
@@ -44,8 +44,11 @@ async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats) {
             }
 
             resp.json().then((json) => {
-                setSchedule(JSON.stringify(json.data.schedules.bus))
-                setBusSeats((json.data.schedules.bus.seats))
+                const reservedSeats = [];
+                json.data.schedules.seatsOnHold.map((_value, _index, _array) => reservedSeats.push(_value));
+                json.data.schedules.bookings.map((_value, _index, _array) => reservedSeats.push(_value));
+                setBookedSeats(reservedSeats);
+                setBusSeats(json.data.schedules.bus.seats);
             })
         })
 }
@@ -106,6 +109,7 @@ export default function Reservation() {
 
     const [schedule, setSchedule] = useState([]);
     const [busSeats, setBusSeats] = useState([]);
+    const [bookedSeats, setBookedSeats] = useState([]);
     const [seats, setSeats] = useState([]);
     const [userID, setUserID] = useState();
     const token = localStorage.getItem("token")
@@ -116,7 +120,7 @@ export default function Reservation() {
 
     useEffect(() => {
         const _token = localStorage.getItem("token")
-        fetchSchedule(scheduleID, _token, setSchedule, setBusSeats)
+        fetchSchedule(scheduleID, _token, setSchedule, setBusSeats, setBookedSeats)
     }, [])
     return (
         <>
@@ -129,7 +133,9 @@ export default function Reservation() {
                             {row.map((seat, seatIndex) => (
                                 seat === null ?
                                     <td key={seat + seatIndex} className="seat-block"></td> :
-                                    <td key={seat + seatIndex} className="seat-block"><Link onClick={(e) => { reserveSeat(e, seat, seats, setSeats) }} className="seat-block-link">{seat}</Link></td>
+                                    (bookedSeats.includes(seat) ?
+                                        <td key={seat + seatIndex} className="seat-block" style={{ color: "blue" }}>{seat}</td> :
+                                        <td key={seat + seatIndex} className="seat-block"><Link onClick={(e) => { reserveSeat(e, seat, seats, setSeats) }} className="seat-block-link">{seat}</Link></td>)
                             ))}
                         </tr>
                     ))}
