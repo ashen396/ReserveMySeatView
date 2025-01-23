@@ -4,6 +4,7 @@ import PageNotFound from './components/PageNotFound';
 import HomePage from './components/HomePage';
 import Schedules from './components/Schedules';
 import Reservation from './components/Reservation';
+import PaymentGateway from './components/PaymentGateway';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/' element={<HomePage />} />
           <Route path="/schedules" element={<Schedules />} />
           <Route path="/reservation/:scheduleID" element={<Reservation />} />
+          <Route path="/payconfirmation/:bookingID" element={<PaymentGateway />} />
         </Routes>
       </BrowserRouter>
     </div>

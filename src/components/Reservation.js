@@ -77,22 +77,13 @@ async function bookSeat(token, user, schedule, seats) {
             "schedule": schedule,
             "seats": seats
         })
-    }).then((resp) => resp.json().then((data) => console.log(data)))
+    })
+        .then((resp) => resp.json().then((data) => {
+            const encData = AES.encrypt(data._id, "reservemyseat.bookingidenc");
+            const _url_encoded = encData.toString().replaceAll("/", "_");
+            window.location.href = `/payconfirmation/${_url_encoded}`;
+        }))
         .catch((err) => console.log(err))
-
-    // await fetch(`https://api.myseatreservation.live/api/commuter/v1/bookings`, {
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //         authorization: "Bearer " + token
-    //     },
-    //     method: "POST",
-    //     mode: 'cors',
-    //     body: JSON.stringify({
-    //         "user": "678a29e20820d31dfd11ba0c",
-    //         "schedule": "6789d842e1bb14c3c54f68dc",
-    //         "seats": ["B1"]
-    //     })
-    // })
 }
 
 function login(setUserID, scheduleID, seats) {
