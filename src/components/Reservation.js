@@ -49,8 +49,7 @@ async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBoo
                 json.data.schedules.bookings.map((_value, _index, _array) => reservedSeats.push(_value));
                 setBookedSeats(reservedSeats);
                 setBusSeats(json.data.schedules.bus.seats);
-                setSchedule(json.data.schedules);
-                console.log(json.data.schedules)
+                setSchedule(json.data.schedules.bus.route);
             })
         })
 }
@@ -109,7 +108,7 @@ export default function Reservation() {
     const formatText = encScheduleID.replaceAll("_", "/");
     const scheduleID = AES.decrypt(formatText, "reservemyseat.secretkey").toString(enc.Utf8);
 
-    const [schedule, setSchedule] = useState([]);
+    const [schedule, setSchedule] = useState({});
     const [busSeats, setBusSeats] = useState([]);
     const [bookedSeats, setBookedSeats] = useState([]);
     const [seats, setSeats] = useState([]);
@@ -126,8 +125,8 @@ export default function Reservation() {
     }, [])
     return (
         <>
-            <h1>{schedule.bus.route.source} - {schedule.bus.route.destination}</h1>
-            <h4>{schedule.bus.route.distance} Kms - Rs.{schedule.bus.route.price}</h4>
+            <h1>{schedule?.source || null} - {schedule?.destination || null}</h1>
+            <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>
             <table>
                 <tbody>
                     {busSeats.map((row, rowIndex) => (
