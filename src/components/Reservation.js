@@ -93,16 +93,19 @@ async function bookSeat(token, user, schedule, seats) {
         .catch((err) => console.log(err))
 }
 
-function login(setUserID, scheduleID, seats) {
+function login(setUserID, scheduleID, seats, setUsername) {
     const username = prompt("Username", null);
     const password = prompt("Password", null);
 
-    auth(username, password).then(() => {
-        const _token = localStorage.getItem("token");
-        const userData = jwtDecode(_token);
-        setUserID(userData.id);
-        bookSeat(_token, userData.id, scheduleID, seats);
-    })
+    if (username !== null && password !== null) {
+        auth(username, password).then(() => {
+            const _token = localStorage.getItem("token");
+            const userData = jwtDecode(_token);
+            setUserID(userData.id);
+            setUsername(userData.username);
+            // bookSeat(_token, userData.id, scheduleID, seats);
+        })
+    }
 }
 
 export default function Reservation() {
@@ -123,7 +126,7 @@ export default function Reservation() {
         bookSeat(token, userID, scheduleID, seats);
     }
 
-    fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBookedSeats);
+    // fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBookedSeats);
 
     useEffect(() => {
         const _token = localStorage.getItem("token");
@@ -133,12 +136,13 @@ export default function Reservation() {
             setUsername(userData.username);
         }
 
-        // fetchSchedule(scheduleID, _token, setSchedule, setBusSeats, setBookedSeats);
+        fetchSchedule(scheduleID, _token, setSchedule, setBusSeats, setBookedSeats);
+        // eslint-disable-next-line
     }, [])
     return (
         <>
             {userID === null ?
-                <input type="button" className="btn btn-primary" value="Login" /> :
+                <input type="button" className="btn btn-primary" value="Login" onClick={() => login(setUserID, scheduleID, seats, setUsername)} /> :
                 <p>Good {new Date().getHours() < 12 ? "Morning" : "Evening"}, {username}</p>}
             <h1>{schedule?.source || null} - {schedule?.destination || null}</h1>
             <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>
@@ -168,7 +172,7 @@ export default function Reservation() {
                 <p hidden={seats.length > 0 ? false : true}>Booked Seats: {seats.map((_value, _index, _array) => (_index !== 0 ? ', ' + _value : _value))}</p>
                 <p hidden={seats.length > 0 ? false : true}>Total Cost: Rs.{seats.length * (schedule?.price || 0)}</p>
             </div>
-            <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID !== null) ? handleClick() : login(setUserID, scheduleID, seats))} />
+            <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID !== null) ? (seats.length > 0 ? handleClick() : alert("No seats selected!")) : alert("Please signin first!"))} />
         </>
     )
 }

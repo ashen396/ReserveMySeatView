@@ -36,19 +36,19 @@ function SetSelectorDate(setDate) {
     setDate(datePicker.value);
 }
 
-function SetMinDate() {
-    const date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
+// function SetMinDate() {
+//     const date = new Date();
+//     let day = date.getDate();
+//     let month = date.getMonth() + 1;
 
-    if (day < 10)
-        day = '0' + day;
+//     if (day < 10)
+//         day = '0' + day;
 
-    if (month < 10)
-        month = '0' + month;
+//     if (month < 10)
+//         month = '0' + month;
 
-    return date.getFullYear() + '-' + month + '-' + day;
-}
+//     return date.getFullYear() + '-' + month + '-' + day;
+// }
 
 
 function RouteSelector() {
@@ -80,13 +80,13 @@ function RouteSelector() {
                     <h5>Source</h5>
                     <select id='selector-source' className="form-select homepage-selector" onChange={() => setSource(GetSelectorSrc())}>
                         {routes.map((_value, _index, _array) =>
-                            <option disabled={destination === _value ? true : false}>{_value}</option>
+                            <option key={"src_" + _value} disabled={destination === _value ? true : false}>{_value}</option>
                         )}
                     </select>
                     <h5>Destination</h5>
                     <select id='selector-destination' className="form-select homepage-selector" defaultValue={routes[1]} onChange={() => setDestination(GetSelectorDst())}>
                         {routes.map((_value, _index, _array) =>
-                            <option disabled={source === _value ? true : false}>{_value}</option>
+                            <option key={"dest_" + _value} disabled={source === _value ? true : false}>{_value}</option>
                         )}
                     </select>
                     <h5>Date</h5>
