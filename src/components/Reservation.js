@@ -55,17 +55,20 @@ async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBoo
 }
 
 function reserveSeat(e, selSeat, seats, setSeats) {
-    const arr = []
     if (seats.includes(selSeat)) {
         setSeats((seat) => seat.filter((item) => item !== selSeat))
         e.currentTarget.style.color = "black";
+        e.currentTarget.childNodes[0].src = require("../images/seat.jpg")
     } else {
-        setSeats([...seats, selSeat]);
-        e.currentTarget.style.color = "blue";
-    }
+        if (seats.length >= 5) {
+            alert("Maximum 5 seats can be booked!");
+            return null;
+        }
 
-    // e.currentTarget.style.color = "red";
-    // setSeats([...seats, selSeat]);
+        setSeats([...seats, selSeat]);
+        e.currentTarget.style.color = "green";
+        e.currentTarget.childNodes[0].src = require("../images/seat_sel.jpg")
+    }
 }
 
 async function bookSeat(token, user, schedule, seats) {
@@ -129,8 +132,8 @@ export default function Reservation() {
             <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>
             <div style={{ position: "relative" }}>
                 {/* <img src={require("../images/bus.jpg")} style={{ zIndex: -1, position: "absolute", left: 0, width: "150px", height: "600px" }} ></img> */}
-                <table style={{ position: "absolute", top: 0 }}>
-                    <tbody>
+                <table style={{ position: "absolute", top: 0, border: "4px solid rgba(0,0,0,0.2" }}>
+                    <tbody style={{ padding: "20px", borderRadius: "20px" }}>
                         {busSeats.map((row, rowIndex) => (
                             <tr key={row + rowIndex}>
                                 {row.map((seat, seatIndex) => (
@@ -151,6 +154,8 @@ export default function Reservation() {
                         ))}
                     </tbody>
                 </table>
+                <p>Booked Seats: {seats.map((_value, _index, _array) => (_index !== 0 ? ', ' + _value : _value))}</p>
+                <p>Total Cost: Rs.{seats.length * 5000}</p>
             </div>
             <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID === null) ? handleClick() : login(setUserID, scheduleID, seats))} />
         </>
