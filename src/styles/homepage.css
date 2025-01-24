@@ -17,6 +17,7 @@
     width: fit-content;
     text-align: center;
     margin: 25px;
+    min-width: 160px;
 }
 
 .homepage-selector-contents>h5 {

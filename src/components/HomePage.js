@@ -55,6 +55,7 @@ function RouteSelector() {
     const [source, setSource] = useState(null);
     const [destination, setDestination] = useState(null);
     const [date, setDate] = useState();
+    const routes = ["Colombo", "Moratuwa", "Panadura", "Kaluthara", "Kadawatha"]
 
     useEffect(() => {
         setSource(GetSelectorSrc);
@@ -78,20 +79,18 @@ function RouteSelector() {
                 <div className='homepage-selector-contents'>
                     <h5>Source</h5>
                     <select id='selector-source' className="form-select homepage-selector" onChange={() => setSource(GetSelectorSrc())}>
-                        <option>COLOMBO-11</option>
-                        <option>TRINCOMALEE</option>
-                        <option>EMBILIPITIYA</option>
-                        <option>VAVUNIA</option>
+                        {routes.map((_value, _index, _array) =>
+                            <option disabled={destination === _value ? true : false}>{_value}</option>
+                        )}
                     </select>
                     <h5>Destination</h5>
-                    <select id='selector-destination' className="form-select homepage-selector" onChange={() => setDestination(GetSelectorDst())}>
-                        <option>COLOMBO-11</option>
-                        <option>TRINCOMALEE</option>
-                        <option>EMBILIPITIYA</option>
-                        <option>VAVUNIA</option>
+                    <select id='selector-destination' className="form-select homepage-selector" defaultValue={routes[1]} onChange={() => setDestination(GetSelectorDst())}>
+                        {routes.map((_value, _index, _array) =>
+                            <option disabled={source === _value ? true : false}>{_value}</option>
+                        )}
                     </select>
                     <h5>Date</h5>
-                    <input id='selector-date' className="form-select homepage-selector" type='date' /**min={SetMinDate()}*/ onChange={() => SetSelectorDate(setDate)} />
+                    <input id='selector-date' className="form-select homepage-selector" type='date' /**min={SetMinDate()}*/ min={"2025-01-18"} defaultValue={new Date().toISOString().split("T")[0]} onChange={() => SetSelectorDate(setDate)} />
                     <Link to={`/schedules?source=${source}&destination=${destination}&date=${date}`} className='btn btn-primary'>Search</Link>
                 </div>
             </div>

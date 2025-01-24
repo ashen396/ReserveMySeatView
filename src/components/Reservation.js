@@ -1,7 +1,7 @@
-import { Link, useLocation, useParams } from "react-router-dom";
 import { AES, enc } from "crypto-js";
-import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import '../styles/reservation.css';
 
 async function auth(username, password) {
@@ -115,23 +115,34 @@ export default function Reservation() {
     const [busSeats, setBusSeats] = useState([]);
     const [bookedSeats, setBookedSeats] = useState([]);
     const [seats, setSeats] = useState([]);
-    const [userID, setUserID] = useState();
+    const [userID, setUserID] = useState(null);
+    const [username, setUsername] = useState(null);
     const token = localStorage.getItem("token")
 
     function handleClick() {
         bookSeat(token, userID, scheduleID, seats);
     }
 
+    fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBookedSeats);
+
     useEffect(() => {
-        const _token = localStorage.getItem("token")
-        fetchSchedule(scheduleID, _token, setSchedule, setBusSeats, setBookedSeats)
+        const _token = localStorage.getItem("token");
+        const userData = jwtDecode(_token);
+        if (userData?.id !== undefined) {
+            setUserID(userData.id);
+            setUsername(userData.username);
+        }
+
+        // fetchSchedule(scheduleID, _token, setSchedule, setBusSeats, setBookedSeats);
     }, [])
     return (
         <>
+            {userID === null ?
+                <input type="button" className="btn btn-primary" value="Login" /> :
+                <p>Good {new Date().getHours() < 12 ? "Morning" : "Evening"}, {username}</p>}
             <h1>{schedule?.source || null} - {schedule?.destination || null}</h1>
             <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>
             <div style={{ position: "relative" }}>
-                {/* <img src={require("../images/bus.jpg")} style={{ zIndex: -1, position: "absolute", left: 0, width: "150px", height: "600px" }} ></img> */}
                 <table style={{ position: "absolute", top: 0, border: "4px solid rgba(0,0,0,0.2" }}>
                     <tbody style={{ padding: "20px", borderRadius: "20px" }}>
                         {busSeats.map((row, rowIndex) => (
@@ -141,11 +152,11 @@ export default function Reservation() {
                                         <td key={seat + seatIndex} className="seat-block"></td> :
                                         (bookedSeats.includes(seat) ?
                                             (<td key={seat + seatIndex} className="seat-block" style={{ color: "red" }}>
-                                                <img src={require("../images/seat_booked.jpg")} style={{ width: "26px" }}></img>
+                                                <img alt="img-seat-booked" src={require("../images/seat_booked.jpg")} style={{ width: "26px" }}></img>
                                                 <p style={{ position: "absolute", marginLeft: "3px", marginTop: "-30px" }}>{seat}</p></td>) :
                                             (<td key={seat + seatIndex} className="seat-block">
                                                 <Link onClick={(e) => { reserveSeat(e, seat, seats, setSeats) }} className="seat-block-link">
-                                                    <img src={require("../images/seat.jpg")} style={{ width: "26px" }}></img>
+                                                    <img alt="img-seat" src={require("../images/seat.jpg")} style={{ width: "26px" }}></img>
                                                     <p style={{ position: "absolute", width: "18px", textAlign: "center", marginLeft: "3px", marginTop: "-30px" }}>{seat}</p>
                                                 </Link>
                                             </td>))
@@ -154,10 +165,10 @@ export default function Reservation() {
                         ))}
                     </tbody>
                 </table>
-                <p>Booked Seats: {seats.map((_value, _index, _array) => (_index !== 0 ? ', ' + _value : _value))}</p>
-                <p>Total Cost: Rs.{seats.length * 5000}</p>
+                <p hidden={seats.length > 0 ? false : true}>Booked Seats: {seats.map((_value, _index, _array) => (_index !== 0 ? ', ' + _value : _value))}</p>
+                <p hidden={seats.length > 0 ? false : true}>Total Cost: Rs.{seats.length * (schedule?.price || 0)}</p>
             </div>
-            <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID === null) ? handleClick() : login(setUserID, scheduleID, seats))} />
+            <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID !== null) ? handleClick() : login(setUserID, scheduleID, seats))} />
         </>
     )
 }
