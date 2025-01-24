@@ -61,7 +61,7 @@ function reserveSeat(e, selSeat, seats, setSeats) {
         e.currentTarget.style.color = "black";
     } else {
         setSeats([...seats, selSeat]);
-        e.currentTarget.style.color = "red";
+        e.currentTarget.style.color = "blue";
     }
 
     // e.currentTarget.style.color = "red";
@@ -127,21 +127,31 @@ export default function Reservation() {
         <>
             <h1>{schedule?.source || null} - {schedule?.destination || null}</h1>
             <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>
-            <table>
-                <tbody>
-                    {busSeats.map((row, rowIndex) => (
-                        <tr key={row + rowIndex}>
-                            {row.map((seat, seatIndex) => (
-                                seat === null ?
-                                    <td key={seat + seatIndex} className="seat-block"></td> :
-                                    (bookedSeats.includes(seat) ?
-                                        <td key={seat + seatIndex} className="seat-block" style={{ color: "blue" }}>{seat}</td> :
-                                        <td key={seat + seatIndex} className="seat-block"><Link onClick={(e) => { reserveSeat(e, seat, seats, setSeats) }} className="seat-block-link">{seat}</Link></td>)
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div style={{ position: "relative" }}>
+                {/* <img src={require("../images/bus.jpg")} style={{ zIndex: -1, position: "absolute", left: 0, width: "150px", height: "600px" }} ></img> */}
+                <table style={{ position: "absolute", top: 0 }}>
+                    <tbody>
+                        {busSeats.map((row, rowIndex) => (
+                            <tr key={row + rowIndex}>
+                                {row.map((seat, seatIndex) => (
+                                    seat === null ?
+                                        <td key={seat + seatIndex} className="seat-block"></td> :
+                                        (bookedSeats.includes(seat) ?
+                                            (<td key={seat + seatIndex} className="seat-block" style={{ color: "red" }}>
+                                                <img src={require("../images/seat_booked.jpg")} style={{ width: "26px" }}></img>
+                                                <p style={{ position: "absolute", marginLeft: "3px", marginTop: "-30px" }}>{seat}</p></td>) :
+                                            (<td key={seat + seatIndex} className="seat-block">
+                                                <Link onClick={(e) => { reserveSeat(e, seat, seats, setSeats) }} className="seat-block-link">
+                                                    <img src={require("../images/seat.jpg")} style={{ width: "26px" }}></img>
+                                                    <p style={{ position: "absolute", width: "18px", textAlign: "center", marginLeft: "3px", marginTop: "-30px" }}>{seat}</p>
+                                                </Link>
+                                            </td>))
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <input type="button" className="btn btn-primary" value="Continue" onClick={() => ((userID === null) ? handleClick() : login(setUserID, scheduleID, seats))} />
         </>
     )
