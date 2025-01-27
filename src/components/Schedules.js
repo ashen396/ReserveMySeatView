@@ -33,7 +33,7 @@ async function FetchRouteID(token, source, destination, setDisplayContent) {
 }
 
 async function FetchSchedules(token, routeID, date, setSchedules, setDisplayContent, setErrorMessage) {
-    await fetch(`https://api.myseatreservation.live/api/ntc/v1/schedules?route=${routeID}&date=${date}`, {
+    await fetch(`https://api.myseatreservation.live/api/ntc/v1/schedules?routeId=${routeID}&date=${date}`, {
         headers: {
             authorization: "Bearer " + token
         },
@@ -42,9 +42,15 @@ async function FetchSchedules(token, routeID, date, setSchedules, setDisplayCont
     }).then(async (response) =>
         response.ok ? await response.json()
             .then((json) => {
-                setSchedules(json.data.schedules);
-                setDisplayContent(true);
-            }) : setErrorMessage("No Schedules Found!")).catch((err) => console.log(err));
+                console.log(json)
+                if (json.data.schedules.length > 0) {
+                    setSchedules(json.data.schedules);
+                    setDisplayContent(true);
+                }else{
+                    setErrorMessage("No Schedules Found!");
+                    setDisplayContent(true);
+                }
+            }) : setErrorMessage("Error Fetching Schedules!")).catch((err) => console.log(err));
 }
 
 export default function Schedules() {

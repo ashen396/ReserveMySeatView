@@ -4,30 +4,30 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import '../styles/reservation.css';
 
-async function auth(username, password) {
-    await fetch("https://api.myseatreservation.live/api/auth", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            "action": "register",
-            "username": username,
-            "password": password
-        })
-    })
-        .then((response) => response.json()
-            .then((json) => {
-                if (json.data.code === 200) {
-                    localStorage.removeItem("token");
-                    localStorage.setItem("token", json.data.token);
-                }
-                else
-                    localStorage.removeItem("token")
-            })
-        ).catch((err) => console.log(err));
-}
+// async function auth(username, password) {
+//     await fetch("https://api.myseatreservation.live/api/auth", {
+//         method: "POST",
+//         mode: "cors",
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             "action": "register",
+//             "username": username,
+//             "password": password
+//         })
+//     })
+//         .then((response) => response.json()
+//             .then((json) => {
+//                 if (json.data.code === 200) {
+//                     localStorage.removeItem("token");
+//                     localStorage.setItem("token", json.data.token);
+//                 }
+//                 else
+//                     localStorage.removeItem("token")
+//             })
+//         ).catch((err) => console.log(err));
+// }
 
 async function fetchSchedule(scheduleID, token, setSchedule, setBusSeats, setBookedSeats) {
     await fetch(`https://api.myseatreservation.live/api/ntc/v1/schedules/${scheduleID}`, {
@@ -93,20 +93,20 @@ async function bookSeat(token, user, schedule, seats) {
         .catch((err) => console.log(err))
 }
 
-function login(setUserID, scheduleID, seats, setUsername) {
-    const username = prompt("Username", null);
-    const password = prompt("Password", null);
+// function login(setUserID, scheduleID, seats, setUsername) {
+//     const username = prompt("Username", null);
+//     const password = prompt("Password", null);
 
-    if (username !== null && password !== null) {
-        auth(username, password).then(() => {
-            const _token = localStorage.getItem("token");
-            const userData = jwtDecode(_token);
-            setUserID(userData.id);
-            setUsername(userData.username);
-            // bookSeat(_token, userData.id, scheduleID, seats);
-        })
-    }
-}
+//     if (username !== null && password !== null) {
+//         auth(username, password).then(() => {
+//             const _token = localStorage.getItem("token");
+//             const userData = jwtDecode(_token);
+//             setUserID(userData.id);
+//             setUsername(userData.username);
+//             // bookSeat(_token, userData.id, scheduleID, seats);
+//         })
+//     }
+// }
 
 export default function Reservation() {
     const params = useParams();
@@ -142,7 +142,8 @@ export default function Reservation() {
     return (
         <>
             {userID === null ?
-                <input type="button" className="btn btn-primary" value="Login" onClick={() => login(setUserID, scheduleID, seats, setUsername)} /> :
+                // <input type="button" className="btn btn-primary" value="Login" onClick={() => login(setUserID, scheduleID, seats, setUsername)} /> :
+                <Link to="/login" state={{ path: window.location.pathname }} className="btn btn-primary">Login</Link> :
                 <p>Good {new Date().getHours() < 12 ? "Morning" : "Evening"}, {username}</p>}
             <h1>{schedule?.source || null} - {schedule?.destination || null}</h1>
             <h4>{schedule?.distance || 0} Kms - Rs.{schedule?.price || 0}</h4>

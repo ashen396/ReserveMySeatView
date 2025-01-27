@@ -94,6 +94,14 @@ function RouteSelector() {
                     <Link to={`/schedules?source=${source}&destination=${destination}&date=${date}`} className='btn btn-primary'>Search</Link>
                 </div>
             </div>
+            <br></br>
+            <div>
+            <Link to={`/login`} className='btn btn-primary' style={{marginRight: "20px"}}>User Login</Link>
+            <Link to={`/register`} className='btn btn-primary'>User Register</Link>
+            <br></br>
+            <br></br>
+            <Link to={`/ntc/login`} className='btn btn-primary'>NTC Login</Link>
+            </div>
         </div>)
 }
 
