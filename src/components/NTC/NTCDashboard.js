@@ -217,8 +217,7 @@ function SaveSchedule(token) {
             "startTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(startTime).split(":")[0]) + 5), (Number(String(startTime).split(":")[1]) + 30)).toISOString(),
             "endTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(endTime).split(":")[0]) + 5), (Number(String(endTime).split(":")[1] + 30))).toISOString()
         };
-        console.log(data)
-        // SaveData("schedules", token, data);
+        SaveData("schedules", token, data);
     } else {
         alert("Please Login First!");
     }
