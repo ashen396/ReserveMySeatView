@@ -214,10 +214,11 @@ function SaveSchedule(token) {
             "bus": busID,
             "route": routeID,
             "date": date.toISOString(),
-            "startTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), String(startTime).split(":")[0], String(startTime).split(":")[1]).toISOString(),
-            "endTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), String(endTime).split(":")[0], String(endTime).split(":")[1]).toISOString()
+            "startTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(startTime).split(":")[0]) + 5), (Number(String(startTime).split(":")[1]) + 30)).toISOString(),
+            "endTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(endTime).split(":")[0]) + 5), (Number(String(endTime).split(":")[1] + 30))).toISOString()
         };
-        SaveData("schedules", token, data);
+        console.log(data)
+        // SaveData("schedules", token, data);
     } else {
         alert("Please Login First!");
     }
