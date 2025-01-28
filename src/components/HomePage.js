@@ -55,7 +55,7 @@ function RouteSelector() {
     const [source, setSource] = useState(null);
     const [destination, setDestination] = useState(null);
     const [date, setDate] = useState();
-    const routes = ["Colombo", "Moratuwa", "Panadura", "Kaluthara", "Kadawatha"]
+    const routes = ["Colombo", "Moratuwa", "Panadura", "Kalutara", "Kadawatha"]
 
     useEffect(() => {
         setSource(GetSelectorSrc);

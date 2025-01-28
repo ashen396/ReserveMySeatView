@@ -71,8 +71,10 @@ function SaveDriver(token) {
 
 function SaveRoute(token) {
     if (token !== null) {
-        const source = document.getElementById("route-source").value;
-        const destination = document.getElementById("route-destination").value;
+        const sourceList = document.getElementById("route-source");
+        const source = sourceList[sourceList.selectedIndex].id;
+        const destinationList = document.getElementById("route-destination");
+        const destination = destinationList[destinationList.selectedIndex].id;
         const distance = document.getElementById("route-distance").value;
         const price = document.getElementById("route-price").value;
 
@@ -214,8 +216,8 @@ function SaveSchedule(token) {
             "bus": busID,
             "route": routeID,
             "date": date.toISOString(),
-            "startTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(startTime).split(":")[0]) + 5), (Number(String(startTime).split(":")[1]) + 30)).toISOString(),
-            "endTime": new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), (Number(String(endTime).split(":")[0]) + 5), (Number(String(endTime).split(":")[1] + 30))).toISOString()
+            "startTime": new Date(date.getFullYear(), date.getMonth(), date.getDate(), (Number(String(startTime).split(":")[0]) + 5), (Number(String(startTime).split(":")[1]) + 30)).toISOString(),
+            "endTime": new Date(date.getFullYear(), date.getMonth(), date.getDate(), (Number(String(endTime).split(":")[0]) + 5), (Number(String(endTime).split(":")[1] + 30))).toISOString()
         };
         SaveData("schedules", token, data);
     } else {
@@ -228,6 +230,7 @@ export default function NTCDashboard() {
     const [routes, setRoutes] = useState([]);
     const [buses, setBuses] = useState([]);
     const token = localStorage.getItem("token") || null;
+    const locations = ["Colombo", "Moratuwa", "Panadura", "Kalutara", "Kadawatha"]
 
     useEffect(() => {
         const _token = localStorage.getItem("token");
@@ -246,8 +249,18 @@ export default function NTCDashboard() {
 
             <div id="route">
                 <h1>Add Route</h1>
-                <input id="route-source" type="text" className="form-control" placeholder="Source" />
-                <input id="route-destination" type="text" className="form-control" placeholder="Destination" />
+                {/* <input id="route-source" type="text" className="form-control" placeholder="Source" /> */}
+                <select id="route-source" className="form-control">
+                    {locations.map((_location) =>
+                        <option key={"route-src-" + _location} id={_location}>{_location}</option>
+                    )}
+                </select>
+                {/* <input id="route-destination" type="text" className="form-control" placeholder="Destination" /> */}
+                <select id="route-destination" className="form-control">
+                    {locations.map((_location) =>
+                        <option key={"route-dest-" + _location} id={_location}>{_location}</option>
+                    )}
+                </select>
                 <input id="route-distance" type="text" className="form-control" placeholder="Distance" />
                 <input id="route-price" type="text" className="form-control" placeholder="Price" />
                 <input type="button" className="btn btn-primary" value="Save Route" onClick={() => SaveRoute(token)} />
