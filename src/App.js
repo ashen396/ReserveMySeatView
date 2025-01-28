@@ -8,6 +8,7 @@ import PaymentGateway from './components/PaymentGateway';
 import NTCLogin from './components/NTC/NTCLogin';
 import NTCDashboard from './components/NTC/NTCDashboard';
 import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         <Routes>
           <Route path='*' element={<PageNotFound />} />
           <Route path='/' element={<HomePage />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/user/login' element={<Login />} />
+          <Route path='/user/register' element={<Register />} />
           <Route path='/ntc/login' element={<NTCLogin />} />
           <Route path='/ntc/dashboard' element={<NTCDashboard />} />
           <Route path="/schedules" element={<Schedules />} />
